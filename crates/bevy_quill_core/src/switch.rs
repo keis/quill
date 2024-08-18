@@ -1,5 +1,5 @@
 use crate::{AnyView, BoxedState, Cx, View};
-use bevy::ecs::world::{DeferredWorld, World};
+use bevy::ecs::world::World;
 use bevy::prelude::Entity;
 
 /// A tuple of cases for a switch view.
@@ -190,18 +190,14 @@ impl<
             }
 
             (Some(index), Some(new_index)) => {
-                self.cases
-                    .at(index)
-                    .raze(&mut DeferredWorld::from(cx.world_mut()), &mut state.1);
+                self.cases.at(index).raze(cx.world_mut(), &mut state.1);
                 state.0 = Some(new_index);
                 state.1 = self.cases.at(new_index).build(cx);
                 true
             }
 
             (Some(index), None) => {
-                self.cases
-                    .at(index)
-                    .raze(&mut DeferredWorld::from(cx.world_mut()), &mut state.1);
+                self.cases.at(index).raze(cx.world_mut(), &mut state.1);
                 state.0 = None;
                 state.1 = Box::new(self.fallback.build(cx));
                 true
@@ -209,8 +205,7 @@ impl<
 
             (None, Some(new_index)) => {
                 if let Some(st) = state.1.downcast_mut::<Fallback::State>() {
-                    self.fallback
-                        .raze(&mut DeferredWorld::from(cx.world_mut()), st)
+                    self.fallback.raze(cx.world_mut(), st)
                 }
                 state.0 = Some(new_index);
                 state.1 = self.cases.at(new_index).build(cx);
@@ -241,7 +236,7 @@ impl<
         }
     }
 
-    fn raze(&self, world: &mut DeferredWorld, state: &mut Self::State) {
+    fn raze(&self, world: &mut World, state: &mut Self::State) {
         match state.0 {
             Some(index) => self.cases.at(index).raze(world, &mut state.1),
             None => {

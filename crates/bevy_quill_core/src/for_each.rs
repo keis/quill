@@ -1,9 +1,6 @@
 use std::ops::Range;
 
-use bevy::{
-    ecs::world::{DeferredWorld, World},
-    prelude::Entity,
-};
+use bevy::{ecs::world::World, prelude::Entity};
 
 use crate::{lcs::lcs, Cx, View};
 
@@ -21,7 +18,7 @@ impl<Value: Clone, V: View> ListItem<Value, V> {
             .nodes(world, self.state.as_ref().unwrap(), out);
     }
 
-    fn raze(&mut self, world: &mut DeferredWorld) {
+    fn raze(&mut self, world: &mut World) {
         if let (Some(ref view), Some(mut state)) = (self.view.take(), self.state.take()) {
             view.raze(world, &mut state);
         }
@@ -116,7 +113,7 @@ where
         if lcs_length == 0 {
             // Raze old elements
             for i in prev_range {
-                prev_state[i].raze(&mut DeferredWorld::from(cx.world_mut()));
+                prev_state[i].raze(cx.world_mut());
                 changed = true;
             }
             // Build new elements
@@ -153,7 +150,7 @@ where
             } else {
                 // Deletions
                 for i in prev_range.start..prev_start {
-                    prev_state[i].raze(&mut DeferredWorld::from(cx.world_mut()));
+                    prev_state[i].raze(cx.world_mut());
                     changed = true;
                 }
             }
@@ -199,7 +196,7 @@ where
             } else {
                 // Deletions
                 for i in prev_end..prev_range.end {
-                    prev_state[i].raze(&mut DeferredWorld::from(cx.world_mut()));
+                    prev_state[i].raze(cx.world_mut());
                     changed = true;
                 }
             }
@@ -269,7 +266,7 @@ where
             match state.1 {
                 // If there are > 0 items, destroy fallback if present.
                 Some(ref mut fb_ent) if next_len > 0 => {
-                    fallback.raze(&mut DeferredWorld::from(cx.world_mut()), fb_ent);
+                    fallback.raze(cx.world_mut(), fb_ent);
                     state.1 = None;
                     changed = true;
                 }
@@ -310,7 +307,7 @@ where
         changed
     }
 
-    fn raze(&self, world: &mut DeferredWorld, state: &mut Self::State) {
+    fn raze(&self, world: &mut World, state: &mut Self::State) {
         for child_state in state.0.iter_mut() {
             if let Some(ref view) = child_state.view {
                 view.raze(world, child_state.state.as_mut().unwrap());

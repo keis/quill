@@ -1,6 +1,5 @@
 use bevy::{
-    ecs::world::DeferredWorld,
-    hierarchy::BuildChildren,
+    hierarchy::BuildWorldChildren,
     prelude::{default, Entity, World},
     text::{Text, TextSection, TextStyle},
     ui::node_bundles::TextBundle,
@@ -27,12 +26,13 @@ impl View for String {
         rebuild_text_view(cx.world_mut(), self, state)
     }
 
-    fn raze(&self, world: &mut DeferredWorld, state: &mut Self::State) {
+    fn raze(&self, world: &mut World, state: &mut Self::State) {
         #[cfg(feature = "verbose")]
         info!("Razing String View: {}", *state);
 
         // Delete the text node.
-        world.commands().entity(*state).remove_parent().despawn();
+        world.entity_mut(*state).remove_parent();
+        world.entity_mut(*state).despawn();
     }
 }
 
@@ -51,12 +51,13 @@ impl<'a: 'static> View for &'a str {
         rebuild_text_view(cx.world_mut(), self, state)
     }
 
-    fn raze(&self, world: &mut DeferredWorld, state: &mut Self::State) {
+    fn raze(&self, world: &mut World, state: &mut Self::State) {
         #[cfg(feature = "verbose")]
         info!("Razing &str View: {}", *state);
 
         // Delete the text node.
-        world.commands().entity(*state).remove_parent().despawn();
+        world.entity_mut(*state).remove_parent();
+        world.entity_mut(*state).despawn();
     }
 }
 

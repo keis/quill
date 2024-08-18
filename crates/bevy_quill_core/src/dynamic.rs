@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use bevy::ecs::world::{DeferredWorld, World};
+use bevy::ecs::world::World;
 use bevy::prelude::Entity;
 
 use crate::{AnyView, BoxedState, View, ViewChild};
@@ -40,9 +40,7 @@ impl View for Dynamic {
             state.0 = self.children.0.clone();
             state.0.rebuild(cx, &mut state.1)
         } else {
-            state
-                .0
-                .raze(&mut DeferredWorld::from(cx.world_mut()), &mut state.1);
+            state.0.raze(cx.world_mut(), &mut state.1);
             let view = self.children.0.clone();
             let new_state = view.build(cx);
             state.0 = view;
@@ -51,7 +49,7 @@ impl View for Dynamic {
         }
     }
 
-    fn raze(&self, world: &mut DeferredWorld, state: &mut Self::State) {
+    fn raze(&self, world: &mut World, state: &mut Self::State) {
         state.0.raze(world, &mut state.1)
     }
 
