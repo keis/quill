@@ -94,17 +94,15 @@ pub trait EffectTuple: Send + Sync {
     }
 }
 
-impl<E: EntityEffect> EffectTuple for E {
+impl<E: EffectTuple> EntityEffect for E {
     type State = E::State;
 
-    #[inline(always)]
     fn apply(&self, cx: &mut Cx, target: Entity) -> Self::State {
-        self.apply(cx, target)
+        E::apply(&self, cx, target)
     }
 
-    #[inline(always)]
     fn reapply(&self, cx: &mut Cx, target: Entity, state: &mut Self::State) {
-        self.reapply(cx, target, state)
+        E::reapply(&self, cx, target, state)
     }
 }
 
