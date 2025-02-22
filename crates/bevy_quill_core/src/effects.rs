@@ -3,7 +3,7 @@ use bevy::prelude::*;
 
 #[allow(unused)]
 /// A reactive effect that modifies a target entity.
-pub trait EntityEffect: Sync + Send {
+pub trait EntityEffect: Sync + Send + Clone {
     type State: Send + Sync;
 
     /// Apply the effect to the target entity.
@@ -75,7 +75,7 @@ impl_append_effect!(E0, 0; E1, 1; E2, 2; E3, 3; E4, 4; E5, 5; E6, 6; E7, 7; E8, 
 impl_append_effect!(E0, 0; E1, 1; E2, 2; E3, 3; E4, 4; E5, 5; E6, 6; E7, 7; E8, 8; E9, 9; E10, 10; E11, 11; E12, 12; E13, 13; E14, 14; E15, 15);
 
 #[doc(hidden)]
-pub trait EffectTuple: Send + Sync {
+pub trait EffectTuple: Send + Sync + Clone {
     /// Aggregate EntityEffect::State for all tuple members.
     type State: Send + Sync;
 
@@ -154,13 +154,14 @@ impl_effect_tuple!(E0, 0; E1, 1; E2, 2; E3, 3; E4, 4; E5, 5; E6, 6; E7, 7; E8, 8
 impl_effect_tuple!(E0, 0; E1, 1; E2, 2; E3, 3; E4, 4; E5, 5; E6, 6; E7, 7; E8, 8; E9, 9; E10, 10; E11, 11; E12, 12; E13, 13; E14, 14; E15, 15; E16, 16);
 
 /// A general-purpose effect that allows arbitrary mutations to the display entity.
-pub struct CallbackEffect<F: Fn(&mut Cx, Entity, D), D: PartialEq + Clone> {
+#[derive(Clone)]
+pub struct CallbackEffect<F: Fn(&mut Cx, Entity, D) + Clone, D: PartialEq + Clone> {
     pub effect_fn: F,
     pub deps: D,
 }
 
-impl<F: Fn(&mut Cx, Entity, D) + Send + Sync, D: PartialEq + Clone + Send + Sync> EntityEffect
-    for CallbackEffect<F, D>
+impl<F: Fn(&mut Cx, Entity, D) + Send + Sync + Clone, D: PartialEq + Clone + Send + Sync>
+    EntityEffect for CallbackEffect<F, D>
 {
     type State = D;
     fn apply(&self, cx: &mut Cx, target: Entity) -> Self::State {

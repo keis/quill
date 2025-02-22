@@ -89,7 +89,10 @@ impl<B: Bundle + Default, C: View, E: EffectTuple> Element<B, C, E> {
     }
 
     /// Add a general-purpose effect which can mutate the display entity.
-    pub fn effect<S: Fn(&mut Cx, Entity, D) + Send + Sync, D: PartialEq + Clone + Send + Sync>(
+    pub fn effect<
+        S: Fn(&mut Cx, Entity, D) + Send + Sync + Clone,
+        D: PartialEq + Clone + Send + Sync,
+    >(
         self,
         effect_fn: S,
         deps: D,
@@ -101,7 +104,7 @@ impl<B: Bundle + Default, C: View, E: EffectTuple> Element<B, C, E> {
     }
 
     /// Apply a set of styles to the element
-    pub fn style<S: StyleTuple + 'static>(
+    pub fn style<S: StyleTuple + Clone + 'static>(
         self,
         styles: S,
     ) -> Element<B, C, <E as AppendEffect<ApplyStaticStylesEffect<S>>>::Result>
@@ -118,7 +121,7 @@ impl<B: Bundle + Default, C: View, E: EffectTuple> Element<B, C, E> {
     /// - style_fn: A function which computes the styles based on the dependencies.
     /// - deps: The dependencies which trigger a recompute of the styles.
     pub fn style_dyn<
-        S: Fn(D, &mut StyleBuilder) + Send + Sync,
+        S: Fn(D, &mut StyleBuilder) + Send + Sync + Clone,
         D: PartialEq + Clone + Send + Sync,
     >(
         self,
@@ -152,8 +155,8 @@ impl<B: Bundle + Default, C: View, E: EffectTuple> Element<B, C, E> {
     /// - bundle_gen: A function which computes the bundle based on the dependencies.
     /// - deps: The dependencies which trigger a recompute of the bundle.
     pub fn insert_dyn<
-        B2: Bundle,
-        S: Fn(D) -> B2 + Send + Sync,
+        B2: Bundle + Clone,
+        S: Fn(D) -> B2 + Send + Sync + Clone,
         D: PartialEq + Clone + Send + Sync,
     >(
         self,
@@ -175,7 +178,7 @@ impl<B: Bundle + Default, C: View, E: EffectTuple> Element<B, C, E> {
     /// Arguments:
     /// - condition: if true, the bundle will be inserted.
     /// - factory: A function which computes the component based on the dependencies.
-    pub fn insert_if<C2: Component, S: Fn() -> C2 + Send + Sync>(
+    pub fn insert_if<C2: Component + Clone, S: Fn() -> C2 + Send + Sync + Clone>(
         self,
         condition: bool,
         factory: S,

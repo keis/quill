@@ -12,7 +12,7 @@ pub mod insert;
 mod lcs;
 mod mutable;
 mod portal;
-mod style;
+pub mod style;
 mod switch;
 mod text_view;
 mod tracking_scope;
