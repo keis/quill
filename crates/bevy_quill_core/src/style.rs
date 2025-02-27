@@ -28,8 +28,16 @@ impl<S: StyleTuple + Clone> EntityEffect for ApplyStaticStylesEffect<S> {
 /// update cycle, then the styles are not recomputed.
 #[derive(Clone)]
 pub struct ApplyDynamicStylesEffect<F: Fn(D, &mut StyleBuilder) + Clone, D: PartialEq + Clone> {
-    pub(crate) style_fn: F,
-    pub(crate) deps: D,
+    pub style_fn: F,
+    pub deps: D,
+}
+
+impl<F: Fn(D, &mut StyleBuilder) + Send + Sync + Clone, D: PartialEq + Clone + Send + Sync>
+    PartialEq for ApplyDynamicStylesEffect<F, D>
+{
+    fn eq(&self, other: &Self) -> bool {
+        self.deps == other.deps
+    }
 }
 
 impl<F: Fn(D, &mut StyleBuilder) + Send + Sync + Clone, D: PartialEq + Clone + Send + Sync>
