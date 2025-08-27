@@ -254,7 +254,11 @@ impl<B: Bundle + Default, C: View, E: EffectTuple + 'static> View for Element<B,
         if self.display.is_none() {
             // Only despawn the display entity if we created it. If we got it from the outside,
             // then it's the responsibility of the caller to clean it up.
-            world.commands().entity(state.0).despawn();
+            world
+                .commands()
+                .entity(state.0)
+                .remove::<Children>()
+                .despawn();
         } else {
             world.commands().entity(state.0).remove::<B>();
         }

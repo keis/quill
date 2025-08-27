@@ -1,7 +1,7 @@
 use crate::{cx::Cx, tracking_scope::TrackingScope, AnyViewAdapter, View, ViewThunk};
 use bevy::{
     ecs::{name::Name, world::DeferredWorld},
-    prelude::{ChildOf, Component, Entity, World},
+    prelude::{ChildOf, Children, Component, Entity, World},
 };
 use std::sync::{Arc, Mutex};
 
@@ -125,6 +125,7 @@ impl<VT: ViewTemplate + Clone + PartialEq> View for VT {
             .commands()
             .entity(entity)
             .remove::<ChildOf>()
+            .remove::<Children>()
             .despawn();
     }
 }
