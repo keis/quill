@@ -1,5 +1,5 @@
 use super::builder::StyleBuilder;
-use bevy::render::view::Visibility;
+use bevy::camera::visibility::Visibility;
 
 #[allow(missing_docs)]
 pub trait StyleBuilderVisibility {

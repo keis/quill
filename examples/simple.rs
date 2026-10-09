@@ -32,7 +32,7 @@ fn style_test(ss: &mut StyleBuilder) {
 
 fn setup_view_root(mut commands: Commands) {
     commands.spawn(
-        Element::<NodeBundle>::new()
+        Element::<Node>::new()
             .style(style_test)
             .children((
                 "Hello, ",
@@ -105,7 +105,7 @@ impl ViewTemplate for DynamicStyle {
     type View = impl View;
     fn create(&self, cx: &mut Cx) -> Self::View {
         let counter = cx.use_resource::<Counter>();
-        Element::<NodeBundle>::new()
+        Element::<Node>::new()
             .style_dyn(
                 |ct, ss| {
                     if ct {

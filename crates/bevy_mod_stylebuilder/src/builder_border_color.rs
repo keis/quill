@@ -10,7 +10,7 @@ pub trait StyleBuilderBorderColor {
 impl<'a, 'w> StyleBuilderBorderColor for StyleBuilder<'a, 'w> {
     fn border_color(&mut self, color: impl ColorParam) -> &mut Self {
         if let Some(color) = color.to_val() {
-            self.target.insert(ui::BorderColor(color));
+            self.target.insert(ui::BorderColor::all(color));
         } else {
             self.target.remove::<ui::BorderColor>();
         }
