@@ -35,7 +35,7 @@ const SUITS: &[&str] = &["hearts", "spades", "clubs", "diamonds"];
 
 fn setup_view_root(mut commands: Commands) {
     commands.spawn(
-        Element::<NodeBundle>::new()
+        Element::<Node>::new()
             .style(style_test)
             .children((IterExample, IndexedIterExample))
             .to_root(),
@@ -50,7 +50,7 @@ impl ViewTemplate for IterExample {
     type View = impl View;
     fn create(&self, cx: &mut Cx) -> Self::View {
         let items = cx.use_resource::<List>();
-        Element::<NodeBundle>::new().children((
+        Element::<Node>::new().children((
             "Suits: ",
             For::each(items.items.clone(), |item| format!("[{}]", item)).with_fallback("No items"),
         ))
@@ -64,7 +64,7 @@ impl ViewTemplate for IndexedIterExample {
     type View = impl View;
     fn create(&self, cx: &mut Cx) -> Self::View {
         let items = cx.use_resource::<List>();
-        Element::<NodeBundle>::new().children((
+        Element::<Node>::new().children((
             "Suits: ",
             For::index(&items.items, |item, index| format!("[{}:{}]", item, index))
                 .with_fallback("No items"),

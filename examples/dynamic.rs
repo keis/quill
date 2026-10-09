@@ -32,7 +32,7 @@ fn style_test(ss: &mut StyleBuilder) {
 
 fn setup_view_root(mut commands: Commands) {
     commands.spawn(
-        Element::<NodeBundle>::new()
+        Element::<Node>::new()
             .style(style_test)
             .children(("Hello, ", "world! ", EvenOdd))
             .to_root(),
@@ -47,7 +47,7 @@ impl ViewTemplate for EvenOdd {
     fn create(&self, cx: &mut Cx) -> Self::View {
         let counter = cx.use_resource::<Counter>();
         Dynamic::new(if counter.count & 1 == 0 {
-            Element::<NodeBundle>::new()
+            Element::<Node>::new()
                 .children("[Even]")
                 .into_view_child()
         } else {

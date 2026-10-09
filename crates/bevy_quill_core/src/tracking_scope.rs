@@ -5,7 +5,8 @@ use std::{
 
 use bevy::{
     ecs::{
-        component::{ComponentId, Tick},
+        component::ComponentId,
+        change_detection::Tick,
         world::DeferredWorld,
     },
     platform::collections::HashSet,
