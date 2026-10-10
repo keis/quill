@@ -85,8 +85,8 @@ fn compute_inherited_style(
         }
     }
     let font = TextFont {
-        font: styles.font.unwrap_or_default(),
-        font_size: styles.font_size.unwrap_or(12.),
+        font: styles.font.map(FontSource::Handle).unwrap_or_default(),
+        font_size: styles.font_size.unwrap_or(12.).into(),
         ..default()
     };
     let color = TextColor(styles.color.unwrap_or(Color::WHITE));

@@ -449,7 +449,7 @@ pub(crate) fn reaction_control_system(world: &mut World) {
             Query<&Children>,
             Query<(Entity, &TrackingScope)>,
         )> = SystemState::new(world);
-        let (roots, children, scopes) = st.get(world);
+        let (roots, children, scopes) = st.get(world).expect("SystemState::get failed");
         let roots = roots.iter().collect::<Vec<_>>();
         let mut changed: Vec<Entity> = Vec::with_capacity(64);
         for root in roots {

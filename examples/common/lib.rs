@@ -59,7 +59,7 @@ pub fn setup(
             // intensity: 9000.0,
             intensity: 10000000.0,
             range: 100.,
-            shadows_enabled: true,
+            shadow_maps_enabled: true,
             ..default()
         },
         Transform::from_xyz(8.0, 16.0, 8.0),

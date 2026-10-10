@@ -113,7 +113,7 @@ impl TrackingScope {
         self.resource_deps.insert(
             world
                 .components()
-                .resource_id::<T>()
+                .component_id::<T>()
                 .unwrap_or_else(|| panic!("Unknown resource type: {}", std::any::type_name::<T>())),
         );
     }
@@ -193,6 +193,7 @@ impl TrackingScope {
 struct DespawnEntityCmd(Entity);
 
 impl Command for DespawnEntityCmd {
+    type Out = ();
     fn apply(self, world: &mut World) {
         world.despawn(self.0);
     }
@@ -234,6 +235,7 @@ pub(crate) fn cleanup_tracking_scopes(world: &mut World) {
 pub struct TriggerReaction(pub Entity);
 
 impl Command for TriggerReaction {
+    type Out = ();
     fn apply(self, world: &mut World) {
         if let Ok(mut scope_ent) = world.get_entity_mut(self.0) {
             if let Some(scope) = scope_ent.get_mut::<TrackingScope>() {

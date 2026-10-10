@@ -90,6 +90,7 @@ impl<'w, 's> RunCallback for Commands<'w, 's> {
 pub(crate) struct UnregisterCallbackCmd(pub(crate) Arc<dyn AnyCallback + Send + Sync>);
 
 impl Command for UnregisterCallbackCmd {
+    type Out = ();
     fn apply(self, world: &mut World) {
         self.0.remove(world)
     }
