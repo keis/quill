@@ -2,7 +2,9 @@ use std::{cell::RefCell, marker::PhantomData, sync::Arc};
 
 use bevy::{
     ecs::{
-        bundle::Bundle, event::Event, observer::Observer, system::IntoObserverSystem,
+        event::{EntityEvent, EventPattern},
+        observer::Observer,
+        system::IntoObserverSystem,
         world::DeferredWorld,
     },
     prelude::{ChildOf, Component, Entity, IntoSystem, Resource, SystemInput, World},
@@ -242,10 +244,9 @@ impl<'p, 'w> Cx<'p, 'w> {
     }
 
     pub fn create_observer<
-        E: Event,
-        B: Bundle,
+        E: EventPattern<Event: EntityEvent>,
         M,
-        I: IntoObserverSystem<E, B, M>,
+        I: IntoObserverSystem<E, M>,
         D: PartialEq + Clone + Send + Sync + 'static,
     >(
         &mut self,
